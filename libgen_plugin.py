@@ -109,10 +109,13 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
 
                 author = row.xpath("td[2]")[0].xpath("a")[0].text
 
-                year = row.xpath("td[5]")[0].text
-                pages = row.xpath("td[6]")[0].text
                 size = row.xpath("td[8]")[0].text
-                price = "%s\n%s pages\n%s" % (
+                size = "%s\n" % (size) if size is not None else ""
+                pages = row.xpath("td[6]")[0].text
+                pages = "%s pages\n" % (pages) if pages is not None else ""
+                year = row.xpath("td[5]")[0].text
+                year = "%s" % (year) if year is not None else ""
+                price = "%s%s%s" % (
                     size,
                     pages,
                     year,

@@ -10,7 +10,7 @@ from calibre.customize import StoreBase
 
 class LibGenStore(StoreBase):
     name = "Library Genesis"
-    version = (1, 0, 0)
+    version = (1, 0, 1)
     description = "Searches for books on Library Genesis sites"
     author = "diogovalentte"
     drm_free_only = True
