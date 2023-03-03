@@ -3,7 +3,7 @@ This is a plugin for Calibre which allows you to search LibGen sites for books u
 
 ![Get Books page example](./images/get_books_page_example.png)
 
-### The actual libgen sites are:
+### The current LibGen sites are:
 - libgen.rs
 - libgen.is
 - libgen.st
