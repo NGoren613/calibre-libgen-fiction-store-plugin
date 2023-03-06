@@ -29,6 +29,7 @@ CURRENT_ALIAS_DOMAINS = (
 class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
     def get_download_url(self, url, timeout=60):
         br = browser()
+
         with closing(br.open(url, timeout=timeout)) as f:
             raw = f.read()
             doc = html.fromstring(raw)
@@ -57,20 +58,20 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
         return None
 
     def open(self, parent=None, detail_item=None, external=False):
-        url = self.get_current_domain()
-
         if external or self.config.get("open_external", False):
             open_url(
                 QUrl(
                     url_slash_cleaner(
-                        detail_item["book_page_url"] if detail_item else url
+                        detail_item["book_page_url"]
+                        if detail_item
+                        else self.get_current_domain()
                     )
                 )
             )
         else:
             d = WebStoreDialog(
                 self.gui,
-                url,
+                self.get_current_domain(),
                 parent,
                 detail_item["book_page_url"],
             )
