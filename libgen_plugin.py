@@ -115,11 +115,14 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
                 size = row.xpath("td[8]")[0].text
                 size = "%s\n" % (size) if size is not None else ""
                 pages = row.xpath("td[6]")[0].text
-                pages = "%s pages" % (pages) if pages is not None else ""
-                price = "%s%s%s" % (
+                pages = "%s pages\n" % (pages) if pages is not None else ""
+                language = row.xpath("td[7]")[0].text
+                language = "%s" % (language) if language is not None else ""
+                price = "%s%s%s%s" % (
                     year,
                     size,
                     pages,
+                    language,
                 )  # use price column to display more info
 
                 format = row.xpath("td[9]")[0].text
