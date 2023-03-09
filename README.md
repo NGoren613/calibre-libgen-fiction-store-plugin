@@ -16,4 +16,5 @@ This is a plugin for Calibre which allows you to search LibGen sites for books u
 5. Make sure the store "Library Genesis" is enabled under Get Books -> Shops.
 
 #### Tips
-Calibre defaults to a maximum of 10 results returned at a time. You can change this maximum at Get Books -> Configure -> Configure Search -> Maximum number of results...
+- If you want to search by author, use last name(s) preferably.
+- Calibre defaults to a maximum of 10 results returned at a time. You can change this maximum at Get Books -> Configure -> Configure Search -> Maximum number of results per store.
