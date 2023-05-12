@@ -9,10 +9,10 @@ from calibre.customize import StoreBase
 
 
 class LibGenStore(StoreBase):
-    name = "Library Genesis"
+    name = "Library Genesis Fiction"
     version = (1, 0, 2)
-    description = "Searches for books on Library Genesis sites"
-    author = "diogovalentte"
+    description = "Searches for books on Library Genesis sites fiction section"
+    author = "diogovalentte:NGoren613"
     drm_free_only = True
     actual_plugin = "calibre_plugins.store_libgen.libgen_plugin:LibGenStorePlugin"
     formats = ["EPUB", "PDF"]
