@@ -20,9 +20,9 @@ from calibre.gui2.store.web_store_dialog import WebStoreDialog
 
 
 CURRENT_ALIAS_DOMAINS = (
-    "https://libgen.rs",
-    "https://libgen.is",
-    "https://libgen.st",
+    "https://libgen.rs/fiction",
+    "https://libgen.is/fiction",
+    "https://libgen.st/fiction",
 )
 
 
@@ -83,7 +83,7 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
         current_domain = self.get_current_domain()
         if current_domain is None:
             return
-        url = "%s/search.php?req=%s" % (current_domain, quote_plus(query))
+        url = "%s/?q=%s" % (current_domain, quote_plus(query))
 
         br = browser()
 
