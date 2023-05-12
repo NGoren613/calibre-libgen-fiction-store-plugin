@@ -20,13 +20,13 @@ from calibre.gui2.store.web_store_dialog import WebStoreDialog
 
 
 CURRENT_ALIAS_DOMAINS = (
-    "https://libgen.rs/fiction",
     "https://libgen.is/fiction",
+    "https://libgen.rs/fiction",
     "https://libgen.st/fiction",
 )
 
 
-class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
+class LibGenFictionStorePlugin(BasicStoreConfig, StorePlugin):
     def get_download_url(self, url, timeout=60):
         br = browser()
 
@@ -39,7 +39,7 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
 
     def get_book_page_info(self, current_domain, url, timeout=60):
         br = browser()
-
+        print("bookinfourl: "+ url)
         with closing(br.open(url, timeout=timeout)) as f:
             raw = f.read()
             doc = html.fromstring(raw)
@@ -92,45 +92,38 @@ class LibGenStorePlugin(BasicStoreConfig, StorePlugin):
             raw = f.read()
             doc = html.fromstring(raw)
 
-            table = doc.xpath("/html/body/table[3]")[0]
+            table = doc.xpath("/html/body/table")[0]
 
-            for row in table:
+            # get body of table
+            tbody = table.xpath("tbody")[0]
+
+            for row in tbody:
                 if counter <= 0:
                     break
-                if row.get("bgcolor") == "#C0C0C0":  # table header
-                    continue
 
-                id = row.xpath("td[1]")[0].text
-                if not id:
-                    continue
-
-                title = row.xpath("td[3]")[0].xpath("a")[0].text
+                title = row.xpath("td[3]")[0].xpath("p/a")[0].text
+                print(title)
                 if not title:
                     continue
+                author = row.xpath("td[1]")[0].xpath("ul/li/a")[0].text
+                print(author)
 
-                author = row.xpath("td[2]")[0].xpath("a")[0].text
-
-                year = row.xpath("td[5]")[0].text
-                year = "%s\n" % (year) if year is not None else ""
-                size = row.xpath("td[8]")[0].text
-                size = "%s\n" % (size) if size is not None else ""
-                pages = row.xpath("td[6]")[0].text
-                pages = "%s pages\n" % (pages) if pages is not None else ""
-                language = row.xpath("td[7]")[0].text
+                formatsize = row.xpath("td[5]")[0].text
+                format = "%s" % (formatsize[0]) if formatsize is not None else ""
+                size = "%s" % (formatsize[1]) if formatsize is not None else ""
+                language = row.xpath("td[4]")[0].text
+                print(language)
                 language = "%s" % (language) if language is not None else ""
-                price = "%s%s%s%s" % (
-                    year,
+                price = "%s%s" % (
                     size,
-                    pages,
                     language,
                 )  # use price column to display more info
 
-                format = row.xpath("td[9]")[0].text
-
-                download_page_url = row.xpath("td[10]/a")[0].get("href")
+                download_page_url = row.xpath("td[6]")[0].xpath("ul/li/a")[0].get("href")
+                print(download_page_url)
                 download_url = self.get_download_url(download_page_url)
-
-                book_page_url = row.xpath("td[3]")[0].xpath("a")[0].get("href")
+                book_page_url = row.xpath("td[3]/p/a")[0].get("href")
+                print("book_page_url: " + book_page_url)
                 detail_item = {
                     "current_domain": current_domain,
                     "book_page_url": "%s/%s" % (current_domain, book_page_url),
