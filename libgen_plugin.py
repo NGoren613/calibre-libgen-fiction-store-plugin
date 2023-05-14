@@ -39,11 +39,13 @@ class LibGenFictionStorePlugin(BasicStoreConfig, StorePlugin):
 
     def get_book_page_info(self, current_domain, url, timeout=60):
         br = browser()
-        print("bookinfourl: "+ url)
+        # Covers are at 'domain/fictioncovers/' not 'domain/fiction/fictioncover/
+        # need to remove /fiction from current_domain
+        current_domain = current_domain.replace('/fiction','')
         with closing(br.open(url, timeout=timeout)) as f:
             raw = f.read()
             doc = html.fromstring(raw)
-            cover_url = doc.xpath("/html/body/table/tr[2]/td[1]/a/img")[0].get("src")
+            cover_url = doc.xpath("/html/body/div/div/img")[0].get("src")
             cover_url = "%s/%s" % (current_domain, cover_url)
 
             return cover_url
@@ -102,28 +104,23 @@ class LibGenFictionStorePlugin(BasicStoreConfig, StorePlugin):
                     break
 
                 title = row.xpath("td[3]")[0].xpath("p/a")[0].text
-                print(title)
                 if not title:
                     continue
                 author = row.xpath("td[1]")[0].xpath("ul/li/a")[0].text
-                print(author)
 
-                formatsize = row.xpath("td[5]")[0].text
+                formatsize = row.xpath("td[5]")[0].text.split(" / ")
                 format = "%s" % (formatsize[0]) if formatsize is not None else ""
                 size = "%s" % (formatsize[1]) if formatsize is not None else ""
                 language = row.xpath("td[4]")[0].text
-                print(language)
                 language = "%s" % (language) if language is not None else ""
-                price = "%s%s" % (
+                price = "%s, %s" % (
                     size,
                     language,
                 )  # use price column to display more info
 
                 download_page_url = row.xpath("td[6]")[0].xpath("ul/li/a")[0].get("href")
-                print(download_page_url)
                 download_url = self.get_download_url(download_page_url)
-                book_page_url = row.xpath("td[3]/p/a")[0].get("href")
-                print("book_page_url: " + book_page_url)
+                book_page_url = row.xpath("td[3]/p/a")[0].get("href").replace('/fiction/','')
                 detail_item = {
                     "current_domain": current_domain,
                     "book_page_url": "%s/%s" % (current_domain, book_page_url),
